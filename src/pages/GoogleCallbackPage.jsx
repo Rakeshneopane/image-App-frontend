@@ -1,25 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUser } from "../store/slices/authSlice.js";
 
 export const GoogleCallbackPage = () =>{
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+     const {userData : user, userStatus} = useSelector((state)=> {
+        console.log("state from callback: ", state);
+        return state.userSlice});
+
+    //fetching when component mounts
+    // useEffect(() => {
+    //     if(userStatus === "idle")
+    //         dispatch(fetchUser());        
+    // }, [userStatus, dispatch]);
+
+    console.log("user from callback: ",user)
+   
     useEffect(()=>{
-        // const params = new URLSearchParams(window.location.search);
-        // const token = params.get("token");
-        // if(!token) return navigate("/login");
+        if(userStatus === "loading" || userStatus === "idle") {
+            console.log("Still loading, waiting...");
+            return;
+        }
+        if(user){
+            console.log("navigating with user:", user, "status:", userStatus);
+            return navigate("/dashboard");
+        }
+        return navigate("/login", {replace: true})
+    },[user, userStatus]);
 
-        axios.get(`${import.meta.env.VITE_BASE_URL}/auth/me`, {
-            withCredentials: true,
-        }).then((res)=>{
-            console.log("User: ",res.data);
-            navigate("/dashboard");
-        }).catch((err)=>{
-            console.log("Auth failed: ", err);
-            navigate("/login");
-        });
-    },[]);
-
-    return <p>Logging you in...</p>
+    return <p>Logging you in... status = {userStatus} </p>
 }

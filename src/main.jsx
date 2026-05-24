@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Navigate } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 import { store } from './store/store.js';
@@ -10,26 +11,31 @@ import App from './App.jsx';
 import { LoginPage } from './pages/LoginPage.jsx';
 import { GoogleCallbackPage } from './pages/GoogleCallBackPage.jsx';
 import { DashboardPage } from './pages/DashboardPage.jsx';
+import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter([ 
+  {
+    path: "/login",
+    element: <LoginPage />
+  },
+  {
+    path: "/v1/profile/google",
+    element: <GoogleCallbackPage />
+  },
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedRoute> 
+        <App /> 
+      </ProtectedRoute>
+    ),
     errorElement: <h1> Something Went Wrong. </h1>,
     hydrateFallbackElement: <h1> Fallback Element: Loading... Just for reference now.</h1>,
     children: [
       {
         index: true,          
-        element: <LoginPage /> //
-      },
-      {
-        path: "/login",
-        element: <LoginPage />
-      },
-      {
-        path: "/v1/profile/google",
-        element: <GoogleCallbackPage />
-      },
+        element: <Navigate to="dashboard" replace={true} /> 
+      },      
       {
         path: "/dashboard",
         element: <DashboardPage />

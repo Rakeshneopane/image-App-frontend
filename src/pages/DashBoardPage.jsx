@@ -1,40 +1,42 @@
 // src/pages/DashboardPage.jsx
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
+import { fetchAllAlbum } from "../store/slices/albumSlice.js";
+
 import AlbumCard from "../components/albums/AlbumCard"
+import { useDispatch, useSelector } from "react-redux";
 
 export const DashboardPage = () => {
 
     console.log("DashboardPage rendered"); // 
     
-    const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
-    const [album, setAlbums] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BASE_URL}/auth/me`, {
-            withCredentials: true,
-        })
-        .then((res) => { 
-            console.log(res.data);
-            setUser(res.data.user);
-            setLoading(false);
-        })
-        .catch(() => navigate("/login"));
+    const { userData : user, userStatus, userError } = useSelector((state)=> {
+        console.log("state: ",state , "user: ", state.userSlice);
+        return state.userSlice
+    });
 
-    }, []);
+    console.log("user: ", user);
 
-    // useEffect(() => {
-    //     axios.get(`${import.meta.env.VITE_BASE_URL}/album/all`, {
-    //         withCredentials: true,
-    //     })
-    //     .then((res) => setAlbums(res.data.user))
-    //     .catch(() => navigate("/login"));
-    // }, []);
-    if (loading) return <p>Loading...</p>;
+    useEffect(()=>{
+        if(user)
+        dispatch(fetchAllAlbum());
+    },[user]);
+
+    useEffect(()=>{
+        if (userStatus === "error") {
+        navigate("/login");
+    }
+    },[navigate, userStatus]);
+
+    const { albumsData: albums, albumStatus, albumError } = useSelector((state)=>state.albumSlice);
+    console.log("albums: ", albums);
+
+    if (userStatus === "loading") return <p>Loading...</p>;
     
     return (
         <div>
@@ -48,15 +50,17 @@ export const DashboardPage = () => {
                 <p>Loading... user is gone</p>
             )}
 
-            {/* {album ? (
-                <>
+            {albums ? ( albums?.map((album)=>(
+                <div key={album._id}>
                     <h1>Welcome, {album.name}</h1>
                     <p>{album.description}</p>
                     <p>owner: {user._id === album.owner._id ? user : "no match"} </p>
-                </>
+                </div>
+            ))
+                
             ) : (
                 <p>Loading...</p>
-            )} */}
+            )}
         </div>
     );
 };

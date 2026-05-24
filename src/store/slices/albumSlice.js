@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios"
+import axiosInstance from "../../utils/axiosInstance.js";
 
 const initialState = {
-    albums: [],
+    albumsData: [],
     currentAlbum: null, 
-    status: "idle",
-    error: null,
+    albumStatus: "idle",
+    albumError: null,
 }
 
 export const fetchAlbum = createAsyncThunk("album/fetch", async( albumId, {rejectWithValue})=>{
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/album/${albumId}`);
+        const response = await axiosInstance.get(`/album/${albumId}`);
         console.log("response of fetch particular album thunk", response);
         return response.data;
     } catch (error) {
@@ -20,7 +20,7 @@ export const fetchAlbum = createAsyncThunk("album/fetch", async( albumId, {rejec
 
 export const fetchAllAlbum = createAsyncThunk("all_album/fetch", async( _, {rejectWithValue})=>{
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/album/all`);
+        const response = await axiosInstance.get(`/album/all`);
         console.log("response of fetch all album thunk", response);
         return response.data;
     } catch (error) {
@@ -30,7 +30,7 @@ export const fetchAllAlbum = createAsyncThunk("all_album/fetch", async( _, {reje
 
 export const createAlbum = createAsyncThunk("album/create", async( albumData, {rejectWithValue} )=>{
     try {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/album/create`, albumData);
+        const response = await axiosInstance.post(`/album/create`, albumData);
         console.log("response of create album thunk", response);
         return response.data;
     } catch (error) {
@@ -40,7 +40,7 @@ export const createAlbum = createAsyncThunk("album/create", async( albumData, {r
 
 export const deleteAlbum = createAsyncThunk("album/delete", async( albumId, {rejectWithValue} )=>{
     try {
-        const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/album/delete/${albumId}`);
+        const response = await axiosInstance.delete(`/album/delete/${albumId}`);
         console.log("response of delete album thunk", response);
         return response.data;
     } catch (error) {
@@ -50,7 +50,7 @@ export const deleteAlbum = createAsyncThunk("album/delete", async( albumId, {rej
 
 export const updateAlbum = createAsyncThunk("album/update", async( { albumId, albumUpdateData }, {rejectWithValue} )=>{
     try {
-        const response = await axios.patch(`${import.meta.env.VITE_BASE_URL}/album/update/${albumId}`, albumUpdateData);
+        const response = await axiosInstance.patch(`/album/update/${albumId}`, albumUpdateData);
         console.log("response of delete album thunk", response);
         return {...response.data, updatedAlbumId: albumId};
     } catch (error) {
@@ -73,8 +73,8 @@ const albumReducer = createSlice({
             state.albums = action.payload.albums;
         })
         .addCase(fetchAllAlbum.rejected, (state, action)=>{
-            state.status = "error",
-            state.error = action.payload
+            state.status = "error";
+            state.error = action.payload;
         })
         // fetch an album
         .addCase(fetchAlbum.pending, (state)=>{
@@ -85,8 +85,8 @@ const albumReducer = createSlice({
             state.currentAlbum = action.payload.album;
         })
         .addCase(fetchAlbum.rejected, (state, action)=>{
-            state.status = "error",
-            state.error = action.payload
+            state.status = "error";
+            state.error = action.payload;
         })
         //create album
         .addCase(createAlbum.pending, (state)=>{
@@ -97,8 +97,8 @@ const albumReducer = createSlice({
             state.albums.push(action.payload.album);
         })
         .addCase(createAlbum.rejected, (state, action)=>{
-            state.status = "error",
-            state.error = action.payload
+            state.status = "error";
+            state.error = action.payload;
         })
         //update album
         .addCase(updateAlbum.pending, (state)=>{
@@ -109,15 +109,15 @@ const albumReducer = createSlice({
             const updatedAlbumId = action.payload.updatedAlbumId;
             state.albums = state.albums.map((album)=> {
                 if(album._id === updatedAlbumId){
-                    const modifiedAlbum = action.payload.album
-                    return modifiedAlbum
+                    const modifiedAlbum = action.payload.album;
+                    return modifiedAlbum;
                 }
                 return album 
             })
         })
         .addCase(updateAlbum.rejected, (state, action)=>{
-            state.status = "error",
-            state.error = action.payload
+            state.status = "error";
+            state.error = action.payload;
         })
         // delete album
         .addCase(deleteAlbum.pending, (state)=>{
@@ -128,8 +128,8 @@ const albumReducer = createSlice({
             state.albums = state.albums.filter((album)=> album._id !== action.payload.album._id);
         })
         .addCase(deleteAlbum.rejected, (state, action)=>{
-            state.status = "error",
-            state.error = action.payload
+            state.status = "error";
+            state.error = action.payload;
         })
 
     }
