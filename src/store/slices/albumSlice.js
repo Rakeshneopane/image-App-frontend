@@ -66,48 +66,49 @@ const albumReducer = createSlice({
         builder
         // fetch all albums
         .addCase(fetchAllAlbum.pending, (state)=>{
-            state.status="loading";
+            state.albumStatus="loading";
         })
         .addCase(fetchAllAlbum.fulfilled, (state, action)=>{
-            state.status = "success";
-            state.albums = action.payload.albums;
+            console.log("payload shape:", action.payload);
+            state.albumStatus = "success";
+            state.albumsData = action.payload.albums;
         })
         .addCase(fetchAllAlbum.rejected, (state, action)=>{
-            state.status = "error";
-            state.error = action.payload;
+            state.albumStatus = "error";
+            state.albumError = action.payload;
         })
         // fetch an album
         .addCase(fetchAlbum.pending, (state)=>{
-            state.status="loading";
+            state.albumStatus="loading";
         })
         .addCase(fetchAlbum.fulfilled, (state, action)=>{
-            state.status = "success";
+            state.albumStatus = "success";
             state.currentAlbum = action.payload.album;
         })
         .addCase(fetchAlbum.rejected, (state, action)=>{
-            state.status = "error";
-            state.error = action.payload;
+            state.albumStatus = "error";
+            state.albumError = action.payload;
         })
         //create album
         .addCase(createAlbum.pending, (state)=>{
-            state.status="loading";
+            state.albumStatus="loading";
         })
         .addCase(createAlbum.fulfilled, (state, action)=>{
-            state.status = "success";
-            state.albums.push(action.payload.album);
+            state.albumStatus = "success";
+            state.albumsData.push(action.payload.album);
         })
         .addCase(createAlbum.rejected, (state, action)=>{
-            state.status = "error";
-            state.error = action.payload;
+            state.albumStatus = "error";
+            state.albumError = action.payload;
         })
         //update album
         .addCase(updateAlbum.pending, (state)=>{
-            state.status="loading";
+            state.albumStatus="loading";
         })
         .addCase(updateAlbum.fulfilled, (state, action)=>{
-            state.status = "success";
+            state.albumStatus = "success";
             const updatedAlbumId = action.payload.updatedAlbumId;
-            state.albums = state.albums.map((album)=> {
+            state.albumsData = state.albumsData.map((album)=> {
                 if(album._id === updatedAlbumId){
                     const modifiedAlbum = action.payload.album;
                     return modifiedAlbum;
@@ -116,20 +117,20 @@ const albumReducer = createSlice({
             })
         })
         .addCase(updateAlbum.rejected, (state, action)=>{
-            state.status = "error";
-            state.error = action.payload;
+            state.albumStatus = "error";
+            state.albumError = action.payload;
         })
         // delete album
         .addCase(deleteAlbum.pending, (state)=>{
-            state.status="loading";
+            state.albumStatus="loading";
         })
         .addCase(deleteAlbum.fulfilled, (state, action)=>{
-            state.status = "success";
-            state.albums = state.albums.filter((album)=> album._id !== action.payload.album._id);
+            state.albumStatus = "success";
+            state.albumsData = state.albumsData.filter((album)=> album._id !== action.payload.album._id);
         })
         .addCase(deleteAlbum.rejected, (state, action)=>{
-            state.status = "error";
-            state.error = action.payload;
+            state.albumStatus = "error";
+            state.albumError = action.payload;
         })
 
     }

@@ -11,7 +11,7 @@ const initialState = {
 
 export const uploadImages = createAsyncThunk("image/upload", async( imageData, {rejectWithValue} )=>{
     try {
-        const response = await axiosInstance.patch(`/image/upload`, imageData);
+        const response = await axiosInstance.post(`/image/upload`, imageData);
         console.log("response of filtered images thunk", response);
         return response.data;
     } catch (error) {

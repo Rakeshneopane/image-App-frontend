@@ -1,22 +1,19 @@
-// src/pages/DashboardPage.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
 import { fetchAllAlbum } from "../store/slices/albumSlice.js";
 
-import AlbumCard from "../components/albums/AlbumCard"
+import AlbumSection from "../components/albums/AlbumSection.jsx"
 import { useDispatch, useSelector } from "react-redux";
 
-export const DashboardPage = () => {
+import UploadModal from "@/components/modals/uploadModal.jsx";
 
-    console.log("DashboardPage rendered"); // 
-    
+export const DashBoardPage = () => {
+
+    console.log("DashboardPage rendered"); 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { userData : user, userStatus, userError } = useSelector((state)=> {
-        console.log("state: ",state , "user: ", state.userSlice);
         return state.userSlice
     });
 
@@ -27,6 +24,7 @@ export const DashboardPage = () => {
         dispatch(fetchAllAlbum());
     },[user]);
 
+    
     useEffect(()=>{
         if (userStatus === "error") {
         navigate("/login");
@@ -34,33 +32,30 @@ export const DashboardPage = () => {
     },[navigate, userStatus]);
 
     const { albumsData: albums, albumStatus, albumError } = useSelector((state)=>state.albumSlice);
+    
     console.log("albums: ", albums);
-
+    
     if (userStatus === "loading") return <p>Loading...</p>;
     
-    return (
-        <div>
+     return (
+        <div className="h-full flex flex-col bg-gradient-to-b from-gray-300 to-gray-100 w-full">
             {user ? (
-                <>
-                    <h1 className="bg-blue-500">Welcome, {user.name}</h1>
-                    <p>{user.email}</p>
-                    <AlbumCard />
-                </>
+                <div className="p-4 flex-shrink-0">
+                    <h1 className="font-bold text-xl tracking-tight text-foreground">
+                        Welcome Back, {user.name.split(" ")[0]}
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                        Here's what's happening with your photos
+                    </p>
+                </div>
             ) : (
                 <p>Loading... user is gone</p>
             )}
 
-            {albums ? ( albums?.map((album)=>(
-                <div key={album._id}>
-                    <h1>Welcome, {album.name}</h1>
-                    <p>{album.description}</p>
-                    <p>owner: {user._id === album.owner._id ? user : "no match"} </p>
-                </div>
-            ))
-                
-            ) : (
-                <p>Loading...</p>
-            )}
+            <div className="flex-1 min-h-0">
+                <AlbumSection />
+            </div>
+            <UploadModal />
         </div>
     );
 };

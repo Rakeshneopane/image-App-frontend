@@ -12,10 +12,10 @@ export const GoogleCallbackPage = () =>{
         return state.userSlice});
 
     //fetching when component mounts
-    // useEffect(() => {
-    //     if(userStatus === "idle")
-    //         dispatch(fetchUser());        
-    // }, [userStatus, dispatch]);
+    useEffect(() => {
+        if(userStatus === "idle"){
+            dispatch(fetchUser());}        
+    }, [userStatus, dispatch]);
 
     console.log("user from callback: ",user)
    
@@ -26,9 +26,10 @@ export const GoogleCallbackPage = () =>{
         }
         if(user){
             console.log("navigating with user:", user, "status:", userStatus);
-            return navigate("/dashboard");
+            navigate("/dashboard");
         }
-        return navigate("/login", {replace: true})
+        else
+            navigate("/login", {replace: true})
     },[user, userStatus]);
 
     return <p>Logging you in... status = {userStatus} </p>

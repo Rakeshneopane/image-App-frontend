@@ -10,8 +10,9 @@ import './index.css';
 import App from './App.jsx';
 import { LoginPage } from './pages/LoginPage.jsx';
 import { GoogleCallbackPage } from './pages/GoogleCallBackPage.jsx';
-import { DashboardPage } from './pages/DashboardPage.jsx';
+import { DashBoardPage } from './pages/DashBoardPage.jsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
+import AlbumSection from './components/albums/AlbumSection.jsx';
 
 const router = createBrowserRouter([ 
   {
@@ -38,7 +39,11 @@ const router = createBrowserRouter([
       },      
       {
         path: "/dashboard",
-        element: <DashboardPage />
+        element: <DashBoardPage />
+      },
+      {
+        path: "/albums",
+        element: <AlbumSection />
       },
     ]
   }

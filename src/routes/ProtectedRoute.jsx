@@ -1,13 +1,12 @@
 import { Navigate } from "react-router-dom"
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import {fetchUser} from "../store/slices/authSlice.js"
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../store/slices/authSlice.js"
 
 export const ProtectedRoute = ({ children ,requiredRole = null})=>{
 
     const { userData : user, userStatus, userError } = useSelector((state)=> {
-        console.log("state: ",state);
+        console.log("state from protected route ",state);
         return state.userSlice});
 
     const dispatch = useDispatch();
@@ -20,11 +19,13 @@ export const ProtectedRoute = ({ children ,requiredRole = null})=>{
 
     console.log( userStatus, userError, user );
     if(userStatus === "loading" || userStatus === "idle"){
+        console.log("userStatus: ", userStatus);
         return( <div> Loading... from protected route compo </div>)
     }
     
 
     if(!user){
+        console.log("rejecting from protected route.")
         return <Navigate to="/login" replace={true} />;
     }
 
