@@ -2,12 +2,28 @@ import { Search, Upload, User, Menu, X, Camera, House, Image, Images  } from "lu
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { DialogTrigger } from "@/components/ui/dialog";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
+import { logoutUser } from "@/store/slices/authSlice.js";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+} from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 
 export default function NavbarComponent(){
     const [ menuOpen, setMenuOpen ] = useState(false);
     const [ searchInput, SetSearchInput ] = useState("");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { userData: user } = useSelector((state) => state.userSlice);
+    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+
+    const handleLogout = async () => {
+        await dispatch(logoutUser());
+        navigate("/login");
+    };
+
     return (
         <nav className="border-b border-border bg-background bg-gray-300 text-black shadow">
         <div className="flex px-4 h-14 gap-3 shadow items-center justify-between" >
@@ -47,7 +63,11 @@ export default function NavbarComponent(){
                     />
                 </div>  
                 {/* <Button size="sm"><Upload className="h-3.5 w-3.5 mr-1.5"/> Upload</Button>   */}
-                <Button variant="outline" size="icon" className={"h-8 w-8 rounded-full bg-gray-300"}> 
+                <Button 
+                    variant="outline" size="icon" 
+                    className="h-8 w-8 rounded-full bg-gray-300"
+                    onClick={() => setLogoutDialogOpen(true)}
+                > 
                     <User className="text-black"/> 
                 </Button>
             </div>
@@ -77,9 +97,30 @@ export default function NavbarComponent(){
                     </Link>                    
                 </Button>
                 {/* className="justify-start" */}
-                <Button variant="ghost" > <User /> </Button>
+                <Button variant="ghost" onClick={() => setLogoutDialogOpen(true)}>
+                    <User /> {user?.name?.split(" ")[0] || "Account"}
+                </Button>
             </div>
         )}
+
+            <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Logout?</DialogTitle>
+                        <DialogDescription>
+                            Logged in as {user?.name}. Are you sure you want to log out?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex justify-end gap-2 mt-4">
+                        <Button variant="outline" onClick={() => setLogoutDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={handleLogout}>
+                            <LogOut className="h-4 w-4 mr-2" /> Logout
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </nav>
     )
 } 

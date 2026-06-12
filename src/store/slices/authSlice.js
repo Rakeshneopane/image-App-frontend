@@ -17,6 +17,14 @@ export const fetchUser = createAsyncThunk("user/fetch", async(_, {rejectWithValu
     }
 })
 
+export const logoutUser = createAsyncThunk("user/logout", async(_, {rejectWithValue})=>{
+    try {
+        await axiosInstance.post(`/auth/logout`);
+        return null;
+    } catch (error) {
+        return rejectWithValue(error.response.data.message);
+    }
+})
 
 const userReducer = createSlice({
     name: "userSliceNamesake",
@@ -37,6 +45,13 @@ const userReducer = createSlice({
         })
         .addCase(fetchUser.rejected, (state, action)=>{
             state.userStatus = "error";
+            state.userError = action.payload;
+        }).addCase(logoutUser.fulfilled, (state)=>{
+            state.userData = null;
+            state.userStatus = "idle";
+            state.userError = null;
+        })
+        .addCase(logoutUser.rejected, (state, action)=>{
             state.userError = action.payload;
         })
     }

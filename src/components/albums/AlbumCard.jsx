@@ -1,33 +1,22 @@
 import { 
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
+  Card, CardHeader, CardFooter, CardTitle, CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, ImageIcon, Trash2 } from "lucide-react";
-
+import { MoreVertical, ImageIcon, Trash2, Pencil } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-
 import Photo1 from "../../assets/images/photo1.avif";
-import Photo2 from "../../assets/images/photo2.avif";
-import Photo3 from "../../assets/images/photo3.avif";
-import Photo4 from "../../assets/images/photo4.avif";
-import Photo5 from "../../assets/images/photo5.avif";
 
-export default function AlbumCard({ album, onClick, onDelete }) {
-
+export default function AlbumCard({ album, onClick, onDelete, onEdit }) {
     const [imageError, setImageError] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
-    
-    const isShared = album.sharedUserIds && album.sharedUserIds.length > 0;
+    const isDefault = album.isDefault === true;
 
     return (
         <Card 
-            className="overflow-hidden hover:shadow-lg transition-all"
+            className="overflow-hidden hover:shadow-lg transition-all cursor-pointer"
             onClick={onClick}    
         >
             <div className="aspect-video bg-muted flex items-center justify-center">
@@ -35,7 +24,7 @@ export default function AlbumCard({ album, onClick, onDelete }) {
                     <img 
                         src={Photo1} 
                         alt={album.name}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        className="w-full h-full object-cover"
                         onError={() => setImageError(true)}
                     />
                 ) : (
@@ -49,8 +38,8 @@ export default function AlbumCard({ album, onClick, onDelete }) {
                     <CardTitle className="text-base truncate flex-1">
                         {album.name}
                     </CardTitle>
-                    <Badge variant={isShared ? "default" : "secondary"} className="ml-2">
-                        {isShared ? "Shared" : "Private"}
+                    <Badge variant={album.sharedUserIds?.length > 0 ? "default" : "secondary"} className="ml-2">
+                        {album.sharedUserIds?.length > 0 ? "Shared" : "Private"}
                     </Badge>
                 </div>
                 <CardDescription className="line-clamp-2 text-xs">
@@ -58,34 +47,32 @@ export default function AlbumCard({ album, onClick, onDelete }) {
                 </CardDescription>
             </CardHeader>            
             <CardFooter className="text-xs text-muted-foreground flex justify-between items-center">
-                <span>{album.photoCount || 0} photos </span>
-
-                <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-7 w-7"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Open menu for album:", album._id);
-                    }}
-                >
-                    <MoreVertical className="h-3.5 w-3.5" />
-                </Button>
-
-                {onDelete && (
-                    <Button
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete();
-                        }}
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
-                )}
-
+                <span>{album.photoCount || 0} photos</span>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <MoreVertical className="h-3.5 w-3.5" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenuItem onClick={onEdit}>
+                            <Pencil className="h-4 w-4 mr-2" /> Edit
+                        </DropdownMenuItem>
+                        {!isDefault && (
+                            <DropdownMenuItem 
+                                onClick={onDelete}
+                                className="text-destructive focus:text-destructive"
+                            >
+                                <Trash2 className="h-4 w-4 mr-2" /> Delete
+                            </DropdownMenuItem>
+                        )}
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </CardFooter>
         </Card>
     );

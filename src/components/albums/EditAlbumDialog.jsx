@@ -26,7 +26,7 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
     try {
       await dispatch(updateAlbum({
         albumId: album._id,
-        albumData: { name, description, isPublic }
+        albumUpdateData: { name, description, isPublic }
       })).unwrap();
       toast.success("Album updated successfully");
       onSuccess?.();

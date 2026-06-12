@@ -61,7 +61,12 @@ export const updateAlbum = createAsyncThunk("album/update", async( { albumId, al
 const albumReducer = createSlice({
     name: "album",
     initialState,
-    reducers: {},
+    reducers: {
+        clearAlbumStatus: (state) => {
+            state.albumStatus = "idle";
+            state.albumsData = [];
+        }
+    },
     extraReducers: (builder)=>{
         builder
         // fetch all albums
@@ -135,6 +140,9 @@ const albumReducer = createSlice({
 
     }
 });
+
+
+export const { clearAlbumStatus } = albumReducer.actions;
 
 const { reducer } = albumReducer;
 export default reducer;

@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 function App() {
   return (
     <Dialog>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gray-100">
         <NavbarComponent />
         <main className="flex-1">
           <Outlet />

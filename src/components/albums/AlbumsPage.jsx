@@ -17,11 +17,15 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label"; 
+import EditAlbumDialog from "@/components/albums/EditAlbumDialog.jsx";
 
 export default function AlbumsPage() {
     const { albumsData: albums, albumStatus, albumError } = useSelector((state) => state.albumSlice);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [albumToEdit, setAlbumToEdit] = useState(null);
 
     useEffect(()=>{
         if(albumStatus === "idle"){
@@ -173,7 +177,15 @@ export default function AlbumsPage() {
                             key={album._id} 
                             album={album} 
                             onClick={() => navigate(`/album/${album._id}`)}
+                            onEdit={() => {
+                                setAlbumToEdit(album);
+                                setEditDialogOpen(true);
+                            }}
                             onDelete={() => {
+                                if (album.name === "Default Album") {
+                                    toast.error("Default album cannot be deleted.");
+                                    return;
+                                }
                                 setAlbumToDelete(album._id);
                                 setDeleteDialogOpen(true);
                             }}
@@ -215,6 +227,17 @@ export default function AlbumsPage() {
                 </DialogContent>
             </Dialog>
 
+            {editDialogOpen && albumToEdit && (
+                <EditAlbumDialog
+                    album={albumToEdit}
+                    onClose={() => {
+                        setEditDialogOpen(false);
+                        setAlbumToEdit(null);
+                    }}
+                    onSuccess={() => dispatch(fetchAllAlbum())}
+                />
+            )}
+
         </div>
     );
 }
@@ -237,9 +260,9 @@ function AlbumCardSkeleton() {
     );
 }
 
-function FilterDialog({ open, onOpenChange, sortBy, onSortChange }) {
+function FilterDialog({ open, onOpenChange, sortBy, onSortChange, onEdit }) {
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={onOpenChange} onEdit={onEdit}>
             <DialogContent className="max-w-sm">
                 <DialogHeader>
                     <DialogTitle>Sort & Filter</DialogTitle>

@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllImages, toggleImages, deleteImage } from '@/store/slices/imageSlice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Heart, Trash2, Eye, Download, X } from 'lucide-react';
-import ImageModal from './ImageModal';
-import ImageUploader from './ImageUploader';
+import ImageModal from './ImageModal.jsx';
+import ImageUploader from './ImageUploader.jsx';
 import { toast } from 'sonner';
 import ImageCard from './ImageCard';
+import { Button } from '../ui/button';
 
 export default function ImageGallery({ albumId }) {
     const dispatch = useDispatch();
@@ -139,12 +140,13 @@ export default function ImageGallery({ albumId }) {
                     </select>
                 </div>
                 
-                <button
+                <Button 
+                    variant='default'
                     onClick={() => setShowUploader(true)}
-                    className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition"
+                    className="px-6 py-2 rounded-lg hover:opacity-90 transition"
                 >
                     + Upload Images
-                </button>
+                </Button>
             </div>
 
             {/* Image Grid */}
