@@ -58,7 +58,7 @@ export default function AlbumDetailPage() {
 
     setShareLoading(true);
     try {
-      await axiosInstance.post(`/album/share/${albumId}`, { emails });
+      await axiosInstance.post(`/album/${albumId}/share`, { emails });
       toast.success("Album shared successfully");
       setShareEmail("");
       setShareDialogOpen(false);
