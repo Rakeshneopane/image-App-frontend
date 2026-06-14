@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import ImageCard from './ImageCard';
 import { Button } from '../ui/button';
 
-export default function ImageGallery({ albumId }) {
+export default function ImageGallery({ albumId, isOwner }) {
     const dispatch = useDispatch();
     const { imagesData, imageStatus } = useSelector((state) => state.imageSlice);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -140,13 +140,13 @@ export default function ImageGallery({ albumId }) {
                     </select>
                 </div>
                 
-                <Button 
+                { isOwner && (<Button 
                     variant='default'
                     onClick={() => setShowUploader(true)}
                     className="px-6 py-2 rounded-lg hover:opacity-90 transition"
                 >
                     + Upload Images
-                </Button>
+                </Button>)}
             </div>
 
             {/* Image Grid */}
@@ -168,6 +168,7 @@ export default function ImageGallery({ albumId }) {
                         <ImageCard
                             key={image._id}
                             image={image}
+                            isOwner={isOwner} 
                             onToggleFavorite={() => handleToggleFavorite(image._id, image.isFavorite)}
                             onDelete={() => handleDeleteImage(image._id)}
                             onDownload={() => handleDownloadImage(image.url, image.name)}

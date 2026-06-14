@@ -4,7 +4,7 @@ import { Heart, Trash2, Download, ZoomIn } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-export default function ImageCard({ image, onToggleFavorite, onDelete, onDownload, onClick }) {
+export default function ImageCard({ image, onToggleFavorite, onDelete, onDownload, onClick, isOwner }) {
     const [isHovered, setIsHovered] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -62,15 +62,13 @@ export default function ImageCard({ image, onToggleFavorite, onDelete, onDownloa
                     >
                         <Download className="w-5 h-5 text-gray-600" />
                     </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete();
-                        }}
-                        className="p-2 bg-white/90 rounded-full hover:scale-110 transition"
-                    >
-                        <Trash2 className="w-5 h-5 text-red-600" />
-                    </button>
+                    {isOwner && (
+                        <button onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                            className="p-2 bg-white/90 rounded-full hover:scale-110 transition"
+                        >
+                            <Trash2 className="w-5 h-5 text-red-600" />
+                        </button>
+                    )}
                 </div>
                 
                 <div className="absolute bottom-2 left-2 right-2">

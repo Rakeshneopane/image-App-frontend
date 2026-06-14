@@ -22,6 +22,9 @@ export default function AlbumDetailPage() {
 
   const { currentAlbum } = useSelector((state) => state.albumSlice);
   const { imagesData: images, imageStatus } = useSelector((state) => state.imageSlice);
+  const { userData: user } = useSelector((state) => state.userSlice);
+  
+  const isOwner = currentAlbum?.ownerId?.toString() === user?._id?.toString();
 
   const [activeTab, setActiveTab] = useState("all");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -39,15 +42,23 @@ export default function AlbumDetailPage() {
   }, [albumId, dispatch]);
 
   const handleShare = async () => {
-    if (!shareEmail.trim()) {
-      toast.error("Please enter an email");
-      return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emails = shareEmail.split(",").map(e => e.trim()).filter(Boolean);
+    
+    if (emails.length === 0) {
+        toast.error("Please enter at least one email");
+        return;
     }
+    
+    const invalidEmails = emails.filter(e => !emailRegex.test(e));
+    if (invalidEmails.length > 0) {
+        toast.error(`Invalid emails: ${invalidEmails.join(", ")}`);
+        return;
+    }
+
     setShareLoading(true);
     try {
-      await axiosInstance.post(`/album/share/${albumId}`, {
-        sharedUserIds: [shareEmail.trim()]
-      });
+      await axiosInstance.post(`/album/share/${albumId}`, { emails });
       toast.success("Album shared successfully");
       setShareEmail("");
       setShareDialogOpen(false);
@@ -80,9 +91,13 @@ export default function AlbumDetailPage() {
             <Button variant="ghost" onClick={() => navigate(-1)}>
               <ArrowLeft className="h-4 w-4 mr-2" /> Back
             </Button>
-            <Button variant="outline" onClick={() => setShareDialogOpen(true)}>
-              <Share2 className="h-4 w-4 mr-2" /> Share
-            </Button>
+
+            {isOwner && (
+              <Button variant="outline" onClick={() => setShareDialogOpen(true)}>
+                <Share2 className="h-4 w-4 mr-2" /> Share
+              </Button> 
+            )}
+            
           </div>
           <div className="mt-4">
             <h1 className="text-2xl font-bold">{currentAlbum?.name || "Album"}</h1>
@@ -118,7 +133,7 @@ export default function AlbumDetailPage() {
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
         {activeTab === "all" ? (
-          <ImageGallery albumId={albumId} />
+          <ImageGallery albumId={albumId} isOwner={isOwner} />
         ) : (
           <FavoriteImages albumId={albumId} />
         )}
@@ -130,12 +145,12 @@ export default function AlbumDetailPage() {
           <DialogHeader>
             <DialogTitle>Share Album</DialogTitle>
             <DialogDescription>
-              Enter the user ID of the person you want to share this album with.
+              Enter the email of the person you want to share this album with.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <Input
-              placeholder="Enter user ID..."
+              placeholder="Enter email separated by commas..."
               value={shareEmail}
               onChange={(e) => setShareEmail(e.target.value)}
             />
