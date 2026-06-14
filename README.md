@@ -180,6 +180,22 @@ You'll also need the backend running locally. See the [backend repo](https://git
 
 ---
 
+## Deployment & CI/CD
+
+Deployed on **Vercel** with implicit CI/CD:
+
+- Push to `main` → Vercel auto-builds and deploys
+- Build fails → deployment blocked, previous version stays live
+- Environment variables managed via Vercel dashboard
+
+No manual deployment steps. `git push` is the deployment command.
+
+The backend follows the same pattern on **Render** — push to `main`, auto-deploys.
+
+For a production setup the next step would be GitHub Actions running tests before Vercel deploys — so broken code never reaches production even if it builds. That's on the roadmap.
+
+---
+
 ## What I'd Do Differently
 
 - **Commit after every feature** — One big commit per session means harder rollbacks and messier history.
