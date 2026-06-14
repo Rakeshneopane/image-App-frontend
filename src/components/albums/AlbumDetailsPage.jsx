@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { clearImageStatus } from "@/store/slices/imageSlice";
 import { fetchAlbum, clearAlbumStatus } from "@/store/slices/albumSlice";
 import ImageGallery from "../images/ImageGallery.jsx";
-import FavoriteImages from "../images/FavoriteImages.jx";
+import FavoriteImages from "../images/FavoriteImages.jsx";
 import axiosInstance from "@/utils/axiosInstance.js";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
