@@ -7,8 +7,8 @@ import { Heart, Trash2, Eye, Download, X } from 'lucide-react';
 import ImageModal from './ImageModal.jsx';
 import ImageUploader from './ImageUploader.jsx';
 import { toast } from 'sonner';
-import ImageCard from './ImageCard';
-import { Button } from '../ui/button';
+import ImageCard from './ImageCard.jsx';
+import { Button } from '../ui/button.jsx';
 
 export default function ImageGallery({ albumId, isOwner }) {
     const dispatch = useDispatch();
