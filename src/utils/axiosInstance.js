@@ -22,6 +22,13 @@ axiosInstance.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
+            
+            // if refresh route itself fails → redirect to login immediately
+            if (originalRequest.url === "/auth/refresh") {
+                window.location.href = "/login";
+                return Promise.reject(error);
+            }
+
             if (isRefreshing) {
                 // queue the request until refresh is done
                 return new Promise((resolve, reject) => {
