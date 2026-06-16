@@ -96,6 +96,7 @@ const imageReducer = createSlice({
     reducers: {
         clearImageStatus: (state) => {
             state.imageStatus = "idle";
+            state.imagesData = []; 
         }
     },
     extraReducers: (builder)=>{

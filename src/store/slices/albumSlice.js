@@ -76,7 +76,7 @@ const albumReducer = createSlice({
         .addCase(fetchAllAlbum.fulfilled, (state, action)=>{
             console.log("payload shape:", action.payload);
             state.albumStatus = "success";
-            state.albumsData = action.payload.albums;
+            state.albumsData = action.payload.albums || (action.payload.album ? [action.payload.album] : []);
         })
         .addCase(fetchAllAlbum.rejected, (state, action)=>{
             state.albumStatus = "error";
