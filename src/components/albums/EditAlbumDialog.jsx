@@ -1,10 +1,10 @@
-// components/albums/EditAlbumDialog.jsx
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { updateAlbum } from "@/store/slices/albumSlice";
 import { toast } from "sonner";
 
@@ -21,7 +21,6 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
       toast.error("Album name is required");
       return;
     }
-    
     setIsLoading(true);
     try {
       await dispatch(updateAlbum({
@@ -39,18 +38,18 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
-      <div className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
-          <h2 className="text-xl font-semibold">Edit Album</h2>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Album</DialogTitle>
+          <DialogDescription>
+            Update your album details below.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Album Name *</label>
+            <Label>Album Name *</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -60,7 +59,7 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
+            <Label>Description</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -82,7 +81,7 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
             </label>
           </div>
           
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
@@ -91,7 +90,7 @@ export default function EditAlbumDialog({ album, onClose, onSuccess }) {
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

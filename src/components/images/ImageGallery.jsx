@@ -135,12 +135,12 @@ export default function ImageGallery({ albumId, isOwner }) {
                         placeholder="Search by name or tag..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
                     />
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
                     >
                         <option value="latest">Latest First</option>
                         <option value="oldest">Oldest First</option>
@@ -174,14 +174,14 @@ export default function ImageGallery({ albumId, isOwner }) {
             ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
                     {filteredAndSortedImages.map((image) => {
-                        const latestImage = imagesData.find(img => img._id === image._id) || image;
+
                         return (
                             <ImageCard
                                 key={image._id}
-                                image={latestImage}
+                                image={image}
                                 isOwner={isOwner}
                                 onToggleFavorite={() => handleToggleFavorite(image._id)}
-                                onDelete={() => confirmDeleteImage(latestImage)}
+                                onDelete={() => confirmDeleteImage(image)}
                                 onDownload={() => handleDownloadImage(image.url, image.name)}
                                 onClick={() => setSelectedImage(image)}
                             />

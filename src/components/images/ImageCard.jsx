@@ -1,6 +1,6 @@
 // components/images/ImageCard.jsx
 import React, { useState } from 'react';
-import { Heart, Trash2, Download, ZoomIn } from 'lucide-react';
+import { Heart, Trash2, Download } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -10,7 +10,7 @@ export default function ImageCard({ image, onToggleFavorite, onDelete, onDownloa
 
     return (
         <Card
-            className="relative overflow-hidden cursor-pointer group aspect-square rounded-lg"
+            className="relative overflow-hidden cursor-pointer group aspect-square rounded-lg p-0"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}

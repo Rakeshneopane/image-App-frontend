@@ -1,19 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, Images, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import FeaturedAlbum from "./FeaturedAlbum";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { fetchAllAlbum } from "@/store/slices/albumSlice";
 
-import Photo1 from "../../assets/images/photo1.avif";
-import Photo2 from "../../assets/images/photo2.avif";
-import Photo3 from "../../assets/images/photo3.avif";
-import Photo4 from "../../assets/images/photo4.avif";
-import Photo5 from "../../assets/images/photo5.avif";
+import Photo6 from "../../assets/images/photo1.avif";
+import Photo4 from "../../assets/images/photo2.avif";
+import Photo5 from "../../assets/images/photo3.avif";
+import Photo2 from "../../assets/images/photo4.avif";
+import Photo3 from "../../assets/images/photo5.avif";
+import Photo1 from "../../assets/images/photo6.avif";
 
 export default function AlbumSection(){
 
@@ -35,7 +36,16 @@ export default function AlbumSection(){
             }
         }
         loadAlbum();          
-    },[user, dispatch, fetchAlbumsStatus, albums]);
+    },[user, dispatch, fetchAlbumsStatus]);
+
+    const placeholderAlbums = [
+        { _id: 'ph-1', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo1 },
+        { _id: 'ph-2', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo2 },
+        { _id: 'ph-3', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo3 },
+        { _id: 'ph-4', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo4 },
+        { _id: 'ph-5', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo5 },
+        { _id: 'ph-6', name: '', photoCount: 0, sharedUserIds: [], coverImage: Photo6 },
+    ];
 
     if(fetchAlbumsStatus === "loading"){
         return(
@@ -115,23 +125,16 @@ export default function AlbumSection(){
                                 className="h-full"  
                                 onClick={() => navigate(`/album/${album._id}`)}  
                             />
-                       ))}
+                        ))}
 
                         {Array.from({ 
                             length: Math.max(0, 4 - (albums?.slice(1,5).length || 0)) 
                         }).map((_, i) => (
-                            <Card key={`sk-${i}`} className="overflow-hidden h-full">
-                                {/* <Images className="h-10 w-10 md:h-12 md:w-12 text-muted-foreground/40" />
-                                <img 
-                                    src={Photo2} 
-                                    alt="photo"
-                                    className="w-full h-1/3 object-cover"
-                                /> */}
-                                <Skeleton className="h-full w-full" />
-                                <Skeleton className={"h-1/4"}/>
-                                <Skeleton className={"h-1/3 w-1/4"}/>
-                                <Skeleton className={"h-1/3 w-1/4"}/>
-                            </Card>
+                            <SmallAlbumCard 
+                                key={`ph-${i}`}
+                                album={placeholderAlbums[i]}
+                                onClick={() => {}}
+                            />
                         ))}
                     </div>
                 </div>
@@ -143,31 +146,35 @@ export default function AlbumSection(){
 function SmallAlbumCard({ album, onClick }) {
     return (
         <Card 
-            className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow h-full flex flex-col"
-            onClick={onClick}    
+            className="group overflow-hidden cursor-pointer hover:shadow-lg transition-shadow h-full relative min-h-36"
+            onClick={onClick}   
         >
-            <div className="relative h-28 bg-muted flex-shrink-0">
-                {album ? (
-                    <img 
-                        src={Photo2} 
-                        alt={album.name}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10">
-                        <Images className="h-8 w-8 text-muted-foreground/40" />
-                    </div>
+            {/* Image fills entire card */}
+            <div className="absolute inset-0 overflow-hidden">
+            <img 
+                src={album.coverImage || Photo2} 
+                alt={album.name}
+                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110`}
+            />
+            </div>
+            {/* Dark overlay */}
+            <div className={`absolute inset-0 transition-opacity duration-300 group-hover:bg-black/55`} />
+
+            {/* Text overlaid at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-2">
+                {album.name && (
+                    <p className="text-sm font-medium truncate text-white">{album.name}</p>
                 )}
-                {album.sharedUserIds?.length > 0 && (
-                    <Badge className="absolute top-2 left-2 text-xs" variant="secondary">
-                        Shared
-                    </Badge>
+                {album.photoCount > 0 && (
+                    <p className="text-xs text-white/70">{album.photoCount} photos</p>
                 )}
             </div>
-            <div className="p-2">
-                <p className="text-sm font-medium truncate">{album.name}</p>
-                <p className="text-xs text-muted-foreground">{album.photoCount ?? 0} photos</p>
-            </div>
+
+            {album.sharedUserIds?.length > 0 && (
+                <Badge className="absolute top-2 left-2 text-xs" variant="secondary">
+                    Shared
+                </Badge>
+            )}
         </Card>
     );
 }

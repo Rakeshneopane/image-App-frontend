@@ -68,9 +68,13 @@ const albumReducer = createSlice({
         clearAlbumStatus: (state) => {
             state.fetchAlbumStatus = "idle";
             state.mutationStatus = "idle";
+            //state.currentAlbum = null;
+           //state.currentAlbumId = null;
+            state.albumError = null;
+        },
+        clearCurrentAlbum: (state)=>{
             state.currentAlbum = null;
             state.currentAlbumId = null;
-            state.albumError = null;
         }
     },
     extraReducers: (builder)=>{
@@ -94,10 +98,11 @@ const albumReducer = createSlice({
             state.currentAlbumId = action.meta.arg;
         })
         .addCase(fetchAlbum.fulfilled, (state, action)=>{
-            if (action.meta.arg === state.currentAlbumId) {
-                state.fetchAlbumStatus = "success";
-                state.currentAlbum = action.payload.album;
+            if (action.meta.arg !== state.currentAlbumId) {
+                return; // Ignore stale response
             }
+            state.fetchAlbumStatus = "success";
+            state.currentAlbum = action.payload.album;
         })
         .addCase(fetchAlbum.rejected, (state, action)=>{
             if (action.meta.arg === state.currentAlbumId) {
@@ -153,7 +158,7 @@ const albumReducer = createSlice({
 });
 
 
-export const { clearAlbumStatus } = albumReducer.actions;
+export const { clearAlbumStatus, clearCurrentAlbum } = albumReducer.actions;
 
 const { reducer } = albumReducer;
 export default reducer;

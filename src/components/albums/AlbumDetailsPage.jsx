@@ -5,7 +5,7 @@ import { ArrowLeft, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { clearImageStatus } from "@/store/slices/imageSlice";
-import { fetchAlbum, clearAlbumStatus } from "@/store/slices/albumSlice";
+import { fetchAlbum, clearAlbumStatus, clearCurrentAlbum } from "@/store/slices/albumSlice";
 import ImageGallery from "../images/ImageGallery.jsx";
 import FavoriteImages from "../images/FavoriteImages.jsx";
 import axiosInstance from "@/utils/axiosInstance.js";
@@ -37,6 +37,7 @@ export default function AlbumDetailPage() {
     return () => {
       dispatch(clearImageStatus());
       dispatch(clearAlbumStatus());
+      dispatch(clearCurrentAlbum());
     };
   }, [albumId, dispatch]);
 
@@ -118,12 +119,15 @@ export default function AlbumDetailPage() {
 
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
+
+        { activeTab === "all" && 
         <div className={activeTab === "all" ? "" : "hidden"}>
           <ImageGallery albumId={albumId} isOwner={isOwner} />
-        </div>
+        </div> }
+        {activeTab === "favorites" && 
         <div className={activeTab === "favorites" ? "" : "hidden"}>
-          <FavoriteImages albumId={albumId} />
-        </div>
+          <FavoriteImages albumId={albumId} isOwner={isOwner} />
+        </div>}
       </div>
 
       {/* Share Dialog */}

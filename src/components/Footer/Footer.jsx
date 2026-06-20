@@ -12,7 +12,7 @@ const Footer = () => {
           
           {/* Column 1 - Company */}
           <div>
-            <h3 className="font-bold text-lg mb-3">Company Name</h3>
+            <h3 className="font-bold text-lg mb-3">KaviosPix</h3>
             <p className="text-gray-400 text-sm hover:text-gray-900">
               Making great products since 2024.
             </p>
@@ -45,7 +45,7 @@ const Footer = () => {
               <Input 
                 type="email" 
                 placeholder="Your email" 
-                className="bg-gray-100 border-gray-700 text-white"
+                className="bg-gray-100 border-gray-700"
               />
               <Button size="sm">Subscribe</Button>
             </div>
@@ -58,7 +58,7 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© 2024 Company Name. All rights reserved.</p>
+          <p>© 2024 KaviosPix. All rights reserved.</p>
           <div className="flex gap-4 mt-2 md:mt-0">
             <a href="#" className="hover:text-gray-900">Twitter</a>
             <a href="#" className="hover:text-gray-900">LinkedIn</a>

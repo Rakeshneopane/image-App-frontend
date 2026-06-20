@@ -30,7 +30,6 @@ export default function ImageModal({ image, onClose }) {
                 imageData: { isFavorite: !isFavorite }
             })).unwrap();
             toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
-            //onToggleFavorite?.();
         } catch {
             toast.error("Failed to update favorite");
         }
@@ -75,7 +74,7 @@ export default function ImageModal({ image, onClose }) {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
             onClick={onClose}
         >
             <div
