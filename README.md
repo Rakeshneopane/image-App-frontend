@@ -1,6 +1,6 @@
 # KaviosPix — Frontend 📸
 
-> Your memories, beautifully organized. (And yes, it took longer than expected.)
+> Your memories, beautifully organized.
 
 A photo management web app built with React, Redux Toolkit, and Tailwind CSS. Think Google Photos, but built by one person who learned a lot about cookies along the way.
 
