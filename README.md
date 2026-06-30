@@ -227,7 +227,7 @@ For a production setup, the next step would be GitHub Actions running tests befo
 
 ## What I Learned
 
-This project was started on April 29 and finished in June 2025. Longer than expected. But the things I debugged — OAuth redirects, cookie behavior across origins, Redux state persistence, React's rules of hooks, Windows filename case sensitivity breaking Linux builds — I will never forget those.
+This project was started on April 29 and finished in June 2026. Longer than expected. But the things I debugged — OAuth redirects, cookie behavior across origins, Redux state persistence, React's rules of hooks, Windows filename case sensitivity breaking Linux builds — I will never forget those.
 
 The time it took is the time it took. The next project will go faster.
 
